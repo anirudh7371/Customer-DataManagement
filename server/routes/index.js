@@ -4,12 +4,10 @@ import {
   getCustomerById,
   createCustomer,
   updateCustomer,
-  deleteCustomer,
-  getStats
+  deleteCustomer
 } from '../controllers/customerController.js';
 import {
   getAllUsers,
-  getUserById,
   getUsersByCustomerId,
   createUser,
   updateUser,
@@ -17,17 +15,14 @@ import {
 } from '../controllers/userController.js';
 
 const router = express.Router();
-
 // Customer routes
 router.get('/customers', getAllCustomers);
 router.get('/customers/:id', getCustomerById);
 router.post('/customers', createCustomer);
 router.put('/customers/:id', updateCustomer);
 router.delete('/customers/:id', deleteCustomer);
-
 // User routes
 router.get('/users', getAllUsers);
-router.get('/users/:id', getUserById);
 router.get('/customers/:customerId/users', getUsersByCustomerId);
 router.post('/users', createUser);
 router.put('/users/:id', updateUser);

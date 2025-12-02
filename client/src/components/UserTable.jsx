@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function UserTable({ users }) {
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
+    <div className="bg-white rounded-lg shadow overflow-hidden mt-6">
       <div className="px-6 py-4 border-b bg-gray-50">
         <h3 className="text-lg font-semibold text-gray-900">Users</h3>
       </div>
@@ -10,49 +10,30 @@ export default function UserTable({ users }) {
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Email
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Role
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Age</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Country</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Gender</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {users.map(user => (
               <tr key={user.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-600">{user.email}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                    user.role === 'Admin' 
-                      ? 'bg-purple-100 text-purple-800' 
-                      : 'bg-blue-100 text-blue-800'
-                  }`}>
-                    {user.role}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                    user.status === 'Active' 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-gray-100 text-gray-800'
-                  }`}>
-                    {user.status}
-                  </span>
-                </td>
+                <td className="px-6 py-4 text-sm font-medium text-gray-900">{user.name}</td>
+                <td className="px-6 py-4 text-sm text-gray-600">{user.age}</td>
+                <td className="px-6 py-4 text-sm text-gray-600">{user.role}</td>
+                <td className="px-6 py-4 text-sm text-gray-600">{user.country}</td>
+                <td className="px-6 py-4 text-sm text-gray-600">{user.gender}</td>
               </tr>
             ))}
+            {users.length === 0 && (
+              <tr>
+                <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
+                  No users found for this customer.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

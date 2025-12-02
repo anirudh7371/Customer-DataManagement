@@ -36,11 +36,6 @@ export const createCustomer = async (req, res) => {
     res.status(201).json(customer);
   } catch (error) {
     console.error('Error creating customer:', error);
-    
-    if (error.code === '23505') { // Unique violation
-      return res.status(400).json({ error: 'Email already exists' });
-    }
-    
     res.status(500).json({ error: 'Failed to create customer' });
   }
 };
@@ -57,11 +52,6 @@ export const updateCustomer = async (req, res) => {
     res.json(customer);
   } catch (error) {
     console.error('Error updating customer:', error);
-    
-    if (error.code === '23505') {
-      return res.status(400).json({ error: 'Email already exists' });
-    }
-    
     res.status(500).json({ error: 'Failed to update customer' });
   }
 };
@@ -79,15 +69,5 @@ export const deleteCustomer = async (req, res) => {
   } catch (error) {
     console.error('Error deleting customer:', error);
     res.status(500).json({ error: 'Failed to delete customer' });
-  }
-};
-
-export const getStats = async (req, res) => {
-  try {
-    const stats = await Customer.getStats();
-    res.json(stats);
-  } catch (error) {
-    console.error('Error fetching stats:', error);
-    res.status(500).json({ error: 'Failed to fetch stats' });
   }
 };

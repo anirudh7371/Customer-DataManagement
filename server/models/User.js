@@ -2,36 +2,17 @@ import pool from '../config/database.js';
 
 class User {
   static async findAll() {
-    const query = `
-      SELECT u.*, c.name as customer_name
-      FROM users u
-      JOIN customers c ON u.customer_id = c.id
-      ORDER BY u.created_at DESC
-    `;
-    
+    const query = `SELECT * FROM users ORDER BY created_at DESC`;
     const result = await pool.query(query);
     return result.rows;
-  }
-
-  static async findById(id) {
-    const query = `
-      SELECT u.*, c.name as customer_name
-      FROM users u
-      JOIN customers c ON u.customer_id = c.id
-      WHERE u.id = $1
-    `;
-    
-    const result = await pool.query(query, [id]);
-    return result.rows[0];
   }
 
   static async findByCustomerId(customerId) {
     const query = `
       SELECT * FROM users
-      WHERE customer_id = $1
+      WHEREmVcustomer_id = $1
       ORDER BY created_at DESC
     `;
-    
     const result = await pool.query(query, [customerId]);
     return result.rows;
   }
@@ -45,13 +26,13 @@ class User {
       RETURNING *
     `;
     
-    const values = [customer_id, name, age, role || 'User', country, gender];
+    const values = [customer_id, name, age, role, country, gender];
     const result = await pool.query(query, values);
     return result.rows[0];
   }
 
   static async update(id, userData) {
-    const { name, email, role, status } = userData;
+    const { name, age, role, country, gender } = userData;
     
     const query = `
       UPDATE users
