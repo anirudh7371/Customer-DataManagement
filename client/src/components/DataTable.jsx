@@ -50,7 +50,7 @@ export default function DataTable({
   const processedData = useMemo(() => {
     let result = [...data];
 
-    // 1. Global Search
+    // Global Search
     if (searchTerm) {
       const lowerTerm = searchTerm.toLowerCase();
       result = result.filter(item => 
@@ -60,7 +60,7 @@ export default function DataTable({
       );
     }
 
-    // 2. Column Filters
+    // Column Filters
     Object.keys(filters).forEach(key => {
       if (filters[key]) {
         const lowerFilter = filters[key].toLowerCase();
@@ -70,7 +70,7 @@ export default function DataTable({
       }
     });
 
-    // 3. Sorting
+    // Sorting
     if (sortConfig.key) {
       result.sort((a, b) => {
         const aVal = a[sortConfig.key];
@@ -85,7 +85,7 @@ export default function DataTable({
     return result;
   }, [data, searchTerm, filters, sortConfig]);
 
-  // 4. Pagination
+  // Pagination
   const totalPages = Math.ceil(processedData.length / pageSize);
   const paginatedData = processedData.slice(
     (currentPage - 1) * pageSize, 

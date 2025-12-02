@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Plus, Trash2, Edit2, Eye, ArrowLeft, Users } from "lucide-react";
-import DataTable from "./components/DataTable";
+import React, { useState, useEffect } from "react";
+import { Plus, ArrowLeft, Users } from "lucide-react";
+import CustomerTable from "./components/CustomerTable";
 import UserTable from "./components/UserTable";
 import AddCustomerModal from "./components/AddCustomer";
 import { getCustomers, getCustomerById, deleteCustomer } from "./services/api";
@@ -53,80 +53,6 @@ export default function App() {
   useEffect(() => {
     loadCustomers();
   }, []);
-
-  // --- Column Configuration ---
-  const customerColumns = useMemo(() => [
-    { 
-      key: 'id', 
-      label: 'ID', 
-      sortable: true, 
-      filterable: true,
-      render: (row) => <span className="text-gray-500 font-mono text-xs">#{row.id}</span>
-    },
-    { 
-      key: 'name', 
-      label: 'Customer Name', 
-      sortable: true, 
-      filterable: true,
-      render: (row) => (
-        <button 
-          onClick={() => handleViewDetails(row.id)}
-          className="font-semibold text-blue-600 hover:text-blue-800 hover:underline text-left"
-        >
-          {row.name}
-        </button>
-      )
-    },
-    { 
-      key: 'country', 
-      label: 'Country', 
-      sortable: true, 
-      filterable: true 
-    },
-    { 
-      key: 'user_count', 
-      label: 'Users', 
-      sortable: true, 
-      filterable: false,
-      render: (row) => (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-          <Users size={12} className="mr-1" />
-          {row.user_count}
-        </span>
-      )
-    },
-    {
-      key: 'actions',
-      label: 'Actions',
-      sortable: false,
-      filterable: false,
-      render: (row) => (
-        <div className="flex items-center gap-2">
-          <button 
-            onClick={() => handleViewDetails(row.id)}
-            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-            title="View Details"
-          >
-            <Eye size={18} />
-          </button>
-          <button 
-            onClick={() => handleEdit(row)}
-            className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
-            title="Edit"
-          >
-            <Edit2 size={18} />
-          </button>
-          <button 
-            onClick={() => handleDelete(row.id)}
-            className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-            title="Delete"
-          >
-            <Trash2 size={18} />
-          </button>
-        </div>
-      )
-    }
-  ], []);
 
   // --- Render ---
   return (
@@ -192,12 +118,11 @@ export default function App() {
         ) : (
           // Main Dashboard
           <div className="animate-in fade-in duration-500">
-            <DataTable 
-              tableName="customers"
-              data={customers}
-              columns={customerColumns}
-              title="All Customers"
-              searchPlaceholder="Search customers or countries..."
+            <CustomerTable 
+              customers={customers}
+              onViewDetails={handleViewDetails}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           </div>
         )}

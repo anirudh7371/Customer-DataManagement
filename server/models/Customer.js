@@ -47,7 +47,7 @@ class Customer {
     
     const query = `
       UPDATE customers
-      SET name = $1, country = $2, updated_at = CURRENT_TIMESTAMP
+      SET name = $1, country = $2
       WHERE id = $3
       RETURNING *
     `;

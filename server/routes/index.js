@@ -1,18 +1,6 @@
 import express from 'express';
-import {
-  getAllCustomers,
-  getCustomerById,
-  createCustomer,
-  updateCustomer,
-  deleteCustomer
-} from '../controllers/customerController.js';
-import {
-  getAllUsers,
-  getUsersByCustomerId,
-  createUser,
-  updateUser,
-  deleteUser
-} from '../controllers/userController.js';
+import { getAllCustomers, getCustomerById, createCustomer, updateCustomer, deleteCustomer } from '../controllers/customerController.js';
+import { getUsersByCustomerId, createUser, updateUser, deleteUser } from '../controllers/userController.js';
 
 const router = express.Router();
 // Customer routes
@@ -22,7 +10,6 @@ router.post('/customers', createCustomer);
 router.put('/customers/:id', updateCustomer);
 router.delete('/customers/:id', deleteCustomer);
 // User routes
-router.get('/users', getAllUsers);
 router.get('/customers/:customerId/users', getUsersByCustomerId);
 router.post('/users', createUser);
 router.put('/users/:id', updateUser);
