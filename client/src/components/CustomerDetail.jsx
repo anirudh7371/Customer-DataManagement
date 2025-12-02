@@ -1,8 +1,8 @@
 import React from 'react';
-import { Users } from 'lucide-react';
-import UserList from './UserList';
+import { Users, UserPlus } from 'lucide-react';
+import UserTable from './UserTable';
 
-export default function CustomerDetail({ customer, onEdit }) {
+export default function CustomerDetail({ customer, onEdit, onAddUser, onEditUser, onDeleteUser }) {
   return (
     <>
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
@@ -23,6 +23,13 @@ export default function CustomerDetail({ customer, onEdit }) {
           </div>
           <div className="flex gap-2">
             <button 
+              onClick={onAddUser}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <UserPlus size={16} />
+              Add User
+            </button>
+            <button 
               onClick={() => onEdit(customer)} 
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100"
             >
@@ -32,7 +39,11 @@ export default function CustomerDetail({ customer, onEdit }) {
         </div>
       </div>
 
-      <UserList users={customer.users || []} />
+      <UserTable 
+        users={customer.users || []} 
+        onEdit={onEditUser}
+        onDelete={onDeleteUser}
+      />
     </>
   );
 }

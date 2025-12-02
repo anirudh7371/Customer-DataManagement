@@ -8,7 +8,6 @@ class User {
   }
 
   static async findByCustomerId(customerId) {
-    // FIXED: Changed 'WHEREmVcustomer_id' to 'WHERE customer_id'
     const query = `
       SELECT * FROM users
       WHERE customer_id = $1

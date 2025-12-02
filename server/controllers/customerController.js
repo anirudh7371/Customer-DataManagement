@@ -1,4 +1,5 @@
 import Customer from '../models/Customer.js';
+import User from '../models/User.js'; // Import User model
 
 export async function getAllCustomers(req, res) {
   const customers = await Customer.findAll();
@@ -12,8 +13,12 @@ export async function getCustomerById(req, res) {
   if (!customer) {
     return res.status(404).json({ error: 'Customer not found' });
   }
+
+  // Fetch users associated with this customer
+  const users = await User.findByCustomerId(id);
   
-  res.json(customer);
+  // Return customer data combined with users
+  res.json({ ...customer, users });
 }
 
 export async function createCustomer(req, res) {

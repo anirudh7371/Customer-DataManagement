@@ -40,7 +40,6 @@ export default function UserTable({ users = [], onEdit, onDelete }) {
       filterable: false,
       render: (row) => (
         <div className="flex items-center gap-2">
-          {/* Edit Button */}
           <button 
             onClick={() => onEdit && onEdit(row)}
             className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
@@ -49,7 +48,6 @@ export default function UserTable({ users = [], onEdit, onDelete }) {
             <Edit2 size={18} />
           </button>
           
-          {/* Delete Button */}
           <button 
             onClick={() => onDelete && onDelete(row.id)}
             className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"

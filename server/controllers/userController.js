@@ -10,7 +10,6 @@ export async function createUser(req, res) {
   const user = await User.create(req.body);
   res.status(201).json(user);
 }
-
 export async function updateUser(req, res) {
   const { id } = req.params;
   const user = await User.update(id, req.body);
