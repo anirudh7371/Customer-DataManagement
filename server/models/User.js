@@ -1,7 +1,14 @@
 import pool from '../config/database.js';
 
 class User {
+  static async findAll() {
+    const query = `SELECT * FROM users ORDER BY created_at DESC`;
+    const result = await pool.query(query);
+    return result.rows;
+  }
+
   static async findByCustomerId(customerId) {
+    // FIXED: Changed 'WHEREmVcustomer_id' to 'WHERE customer_id'
     const query = `
       SELECT * FROM users
       WHERE customer_id = $1
