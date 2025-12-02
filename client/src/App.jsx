@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Search, Plus, Trash2, Edit2, Eye, ArrowLeft } from "lucide-react";
-import Header from "./components/Header";
+import React, { useState, useEffect, useMemo } from "react";
+import { Plus, Trash2, Edit2, Eye, ArrowLeft, Users } from "lucide-react";
+import DataTable from "./components/DataTable";
 import UserTable from "./components/UserTable";
 import AddCustomerModal from "./components/AddCustomer";
 import { getCustomers, getCustomerById, deleteCustomer } from "./services/api";
 
 export default function App() {
   const [customers, setCustomers] = useState([]);
-  const [selectedCustomer, setSelectedCustomer] = useState(null); // Contains full details + users
-  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
@@ -25,7 +24,7 @@ export default function App() {
     }
   }
 
-  // Handle "View Details"
+  // --- Handlers ---
   async function handleViewDetails(id) {
     try {
       setLoading(true);
@@ -38,16 +37,14 @@ export default function App() {
     }
   }
 
-  // Handle Delete
   async function handleDelete(id) {
-    if (confirm("Are you sure you want to delete this customer?")) {
+    if (confirm("Are you sure you want to delete this customer? This action cannot be undone.")) {
       await deleteCustomer(id);
       loadCustomers();
       if (selectedCustomer?.id === id) setSelectedCustomer(null);
     }
   }
 
-  // Handle Edit
   function handleEdit(customer) {
     setEditingCustomer(customer);
     setShowAddModal(true);
@@ -57,123 +54,166 @@ export default function App() {
     loadCustomers();
   }, []);
 
-  const filteredCustomers = customers.filter(c =>
-    c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.country.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // --- Column Configuration ---
+  const customerColumns = useMemo(() => [
+    { 
+      key: 'id', 
+      label: 'ID', 
+      sortable: true, 
+      filterable: true,
+      render: (row) => <span className="text-gray-500 font-mono text-xs">#{row.id}</span>
+    },
+    { 
+      key: 'name', 
+      label: 'Customer Name', 
+      sortable: true, 
+      filterable: true,
+      render: (row) => (
+        <button 
+          onClick={() => handleViewDetails(row.id)}
+          className="font-semibold text-blue-600 hover:text-blue-800 hover:underline text-left"
+        >
+          {row.name}
+        </button>
+      )
+    },
+    { 
+      key: 'country', 
+      label: 'Country', 
+      sortable: true, 
+      filterable: true 
+    },
+    { 
+      key: 'user_count', 
+      label: 'Users', 
+      sortable: true, 
+      filterable: false,
+      render: (row) => (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+          <Users size={12} className="mr-1" />
+          {row.user_count}
+        </span>
+      )
+    },
+    {
+      key: 'actions',
+      label: 'Actions',
+      sortable: false,
+      filterable: false,
+      render: (row) => (
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => handleViewDetails(row.id)}
+            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            title="View Details"
+          >
+            <Eye size={18} />
+          </button>
+          <button 
+            onClick={() => handleEdit(row)}
+            className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+            title="Edit"
+          >
+            <Edit2 size={18} />
+          </button>
+          <button 
+            onClick={() => handleDelete(row.id)}
+            className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            title="Delete"
+          >
+            <Trash2 size={18} />
+          </button>
+        </div>
+      )
+    }
+  ], []);
 
+  // --- Render ---
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Header onAddCustomer={() => { setEditingCustomer(null); setShowAddModal(true); }} />
+    <div className="min-h-screen bg-gray-50/50 font-sans text-gray-900">
+      {/* App Header */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+              C
+            </div>
+            <h1 className="text-xl font-bold text-gray-900">CustomerData</h1>
+          </div>
+          
+          <button 
+            onClick={() => { setEditingCustomer(null); setShowAddModal(true); }}
+            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition shadow-sm font-medium text-sm"
+          >
+            <Plus size={18} />
+            New Customer
+          </button>
+        </div>
+      </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        {/* If a customer is selected, show details view */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {selectedCustomer ? (
-          <div>
+          // Detail View
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
             <button 
               onClick={() => setSelectedCustomer(null)}
-              className="flex items-center text-blue-600 mb-4 hover:underline"
+              className="flex items-center text-gray-500 hover:text-blue-600 mb-6 transition-colors font-medium text-sm group"
             >
-              <ArrowLeft size={20} className="mr-1" /> Back to Dashboard
+              <ArrowLeft size={18} className="mr-1 group-hover:-translate-x-1 transition-transform" /> 
+              Back to Dashboard
             </button>
 
-            <div className="bg-white rounded-lg shadow p-6 mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedCustomer.name}</h2>
-              <div className="flex gap-6 text-sm text-gray-600">
-                <p><strong>Country:</strong> {selectedCustomer.country}</p>
-                <p><strong>Total Users:</strong> {selectedCustomer.user_count}</p>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-3xl font-bold text-gray-900">{selectedCustomer.name}</h2>
+                  <div className="flex items-center gap-4 mt-2 text-gray-600">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      {selectedCustomer.country}
+                    </span>
+                    <span className="text-gray-300">|</span>
+                    <span className="flex items-center gap-1.5">
+                      <Users size={16} />
+                      {selectedCustomer.user_count || (selectedCustomer.users ? selectedCustomer.users.length : 0)} Users
+                    </span>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => handleEdit(selectedCustomer)} className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100">
+                    Edit Profile
+                  </button>
+                </div>
               </div>
             </div>
 
             <UserTable users={selectedCustomer.users || []} />
           </div>
         ) : (
-          /* Otherwise show the Dashboard Table */
-          <>
-            {/* Search Bar */}
-            <div className="bg-white rounded-lg shadow p-4 mb-6">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder="Search by Name or Country..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-
-            {/* Customer Table */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-blue-50 border-b border-blue-100">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-blue-900">S.No</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-blue-900">Name</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-blue-900">Country</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-blue-900">User Count</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-blue-900">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {loading ? (
-                    <tr><td colSpan="5" className="p-4 text-center">Loading...</td></tr>
-                  ) : filteredCustomers.map((customer, index) => (
-                    <tr key={customer.id} className="hover:bg-gray-50 transition">
-                      <td className="px-6 py-4 text-sm text-gray-600">{index + 1}</td>
-                      <td 
-                        className="px-6 py-4 text-sm font-medium text-blue-600 cursor-pointer hover:underline"
-                        onClick={() => handleViewDetails(customer.id)}
-                      >
-                        {customer.name}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{customer.country}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{customer.user_count}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex justify-center gap-3">
-                          <button 
-                            onClick={() => handleViewDetails(customer.id)}
-                            title="View Details"
-                            className="text-blue-500 hover:text-blue-700 p-1 bg-blue-50 rounded"
-                          >
-                            <Eye size={18} />
-                          </button>
-                          <button 
-                            onClick={() => handleEdit(customer)}
-                            title="Edit"
-                            className="text-green-500 hover:text-green-700 p-1 bg-green-50 rounded"
-                          >
-                            <Edit2 size={18} />
-                          </button>
-                          <button 
-                            onClick={() => handleDelete(customer.id)}
-                            title="Delete"
-                            className="text-red-500 hover:text-red-700 p-1 bg-red-50 rounded"
-                          >
-                            <Trash2 size={18} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {filteredCustomers.length === 0 && !loading && (
-                    <tr><td colSpan="5" className="p-6 text-center text-gray-500">No customers found.</td></tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </>
+          // Main Dashboard
+          <div className="animate-in fade-in duration-500">
+            <DataTable 
+              tableName="customers"
+              data={customers}
+              columns={customerColumns}
+              title="All Customers"
+              searchPlaceholder="Search customers or countries..."
+            />
+          </div>
         )}
-      </div>
+      </main>
 
+      {/* Add/Edit Modal */}
       {showAddModal && (
         <AddCustomerModal
           initialData={editingCustomer}
           onClose={() => setShowAddModal(false)}
           onSuccess={() => {
             loadCustomers();
+            if (selectedCustomer && editingCustomer?.id === selectedCustomer.id) {
+               // Refresh detail view if we edited the currently viewed customer
+               handleViewDetails(selectedCustomer.id); 
+            }
             setShowAddModal(false);
           }}
         />

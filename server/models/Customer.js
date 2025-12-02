@@ -19,7 +19,7 @@ class Customer {
     return result.rows;
   }
 
-  static async asyncYBfindById(id) {
+  static async findById(id) {
     const query = `
       SELECT * FROM customers WHERE id = $1
     `;
@@ -47,7 +47,7 @@ class Customer {
     
     const query = `
       UPDATE customers
-      SETmWname = $1, country = $2, updated_at = CURRENT_TIMESTAMP
+      SET name = $1, country = $2, updated_at = CURRENT_TIMESTAMP
       WHERE id = $3
       RETURNING *
     `;

@@ -10,7 +10,7 @@ class User {
   static async findByCustomerId(customerId) {
     const query = `
       SELECT * FROM users
-      WHEREmVcustomer_id = $1
+      WHERE customer_id = $1
       ORDER BY created_at DESC
     `;
     const result = await pool.query(query, [customerId]);
