@@ -48,3 +48,8 @@ export async function deleteUser(id) {
   const response = await api.delete(`/users/${id}`);
   return response.data;
 }
+
+export async function updateUser(id) {
+  const response = await api.put(`/users/${id}`);
+  return response.data;
+}

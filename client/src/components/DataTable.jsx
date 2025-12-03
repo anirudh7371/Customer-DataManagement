@@ -17,17 +17,11 @@ export default function DataTable({
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const pageSizeOptions = [10, 20, 50, 100];
-
-  // FIXED: Merge default columns with saved columns to show new 'actions'
   const [visibleColumns, setVisibleColumns] = useState(() => {
     const defaultVisibility = columns.reduce((acc, col) => ({ ...acc, [col.key]: true }), {});
     const saved = localStorage.getItem(`table_vis_${tableName}`);
     if (saved) {
-      try {
         return { ...defaultVisibility, ...JSON.parse(saved) };
-      } catch (e) {
-        return defaultVisibility;
-      }
     }
     return defaultVisibility;
   });

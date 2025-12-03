@@ -114,7 +114,7 @@ export default function AddUserModal({ onClose, onSuccess, initialData = null, c
               className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={formData.gender}
               onChange={e => setFormData({...formData, gender: e.target.value})}
-            />
+            >
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Other">Other</option>
