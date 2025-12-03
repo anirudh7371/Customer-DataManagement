@@ -49,7 +49,7 @@ export async function deleteUser(id) {
   return response.data;
 }
 
-export async function updateUser(id) {
-  const response = await api.put(`/users/${id}`);
+export async function updateUser(id, userData) {
+  const response = await api.put(`/users/${id}`, userData);
   return response.data;
 }

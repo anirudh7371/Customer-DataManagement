@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Routes, Route, useNavigate, useParams } from "react-router-dom";
 import { Plus, ArrowLeft } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
 import CustomerList from "./components/CustomerList";
 import CustomerDetail from "./components/CustomerDetail";
 import AddCustomerModal from "./components/AddCustomer";
 import AddUserModal from "./components/AddUser";
 import { getCustomers, getCustomerById, deleteCustomer, deleteUser } from "./services/api";
 
-export default function App() {
+function CustomerView() {
   const navigate = useNavigate();
   const params = useParams();
 
@@ -66,7 +66,10 @@ export default function App() {
     try {
       await deleteCustomer(id);
       await loadCustomers();
-      if (selectedCustomer?.id === id) setSelectedCustomer(null);
+      if (selectedCustomer?.id === id) {
+        setSelectedCustomer(null);
+        navigate('/');
+      }
     } catch (err) {
       console.error("Delete failed:", err);
     }
@@ -84,6 +87,7 @@ export default function App() {
       await handleViewDetails(selectedCustomer.id);
     }
     setShowAddModal(false);
+    setEditingCustomer(null);
   }
 
   // --- User Actions ---
@@ -111,13 +115,14 @@ export default function App() {
 
   async function handleUserModalSuccess() {
     setShowUserModal(false);
+    setEditingUser(null);
     if (selectedCustomer) {
       await handleViewDetails(selectedCustomer.id);
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50 font-sans text-gray-900">
+    <>
       <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -170,7 +175,7 @@ export default function App() {
       {showAddModal && (
         <AddCustomerModal
           initialData={editingCustomer}
-          onClose={() => setShowAddModal(false)}
+          onClose={() => { setShowAddModal(false); setEditingCustomer(null); }}
           onSuccess={handleModalSuccess}
         />
       )}
@@ -180,10 +185,21 @@ export default function App() {
         <AddUserModal
           initialData={editingUser}
           customerId={selectedCustomer.id}
-          onClose={() => setShowUserModal(false)}
+          onClose={() => { setShowUserModal(false); setEditingUser(null); }}
           onSuccess={handleUserModalSuccess}
         />
       )}
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <div className="min-h-screen bg-gray-50/50 font-sans text-gray-900">
+      <Routes>
+        <Route path="/" element={<CustomerView />} />
+        <Route path="/customers/:id" element={<CustomerView />} />
+      </Routes>
     </div>
   );
 }

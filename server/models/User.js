@@ -26,7 +26,15 @@ class User {
       RETURNING *
     `;
     
-    const values = [customer_id, name, age, role, country, gender];
+    const values = [
+        parseInt(customer_id), 
+        name, 
+        parseInt(age), 
+        role, 
+        country, 
+        gender
+    ];
+    
     const result = await pool.query(query, values);
     return result.rows[0];
   }
@@ -41,7 +49,7 @@ class User {
       RETURNING *
     `;
     
-    const values = [name, age, role, country, gender, id];
+    const values = [name, parseInt(age), role, country, gender, id];
     const result = await pool.query(query, values);
     return result.rows[0];
   }

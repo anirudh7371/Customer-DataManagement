@@ -30,11 +30,10 @@ class Customer {
 
   static async create(customerData) {
     const { name, country } = customerData;
-    
     const query = `
-      INSERT INTO customers (name, country, user_count)
-      VALUES ($1, $2, 0)
-      RETURNING *
+      INSERT INTO customers (name, country)
+      VALUES ($1, $2)
+      RETURNING *, 0 as user_count
     `;
     
     const values = [name, country];
