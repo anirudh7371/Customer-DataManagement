@@ -10,7 +10,7 @@ export default function UserTable({ users = [], onEdit, onDelete }) {
       label: 'Full Name', 
       sortable: true, 
       filterable: true, 
-      render: (row) => <span className="font-medium text-gray-900">{row.name}</span> 
+      render: (row) => <span className="font-medium text-gray-900 dark:text-gray-100">{row.name}</span> 
     },
     { 
       key: 'age', 
@@ -25,7 +25,9 @@ export default function UserTable({ users = [], onEdit, onDelete }) {
       filterable: true,
       render: (row) => (
         <span className={`px-2 py-1 rounded-md text-xs font-medium ${
-          row.role === 'Admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'
+          row.role === 'Admin' 
+            ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-200' 
+            : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
         }`}>
           {row.role}
         </span>
@@ -42,7 +44,7 @@ export default function UserTable({ users = [], onEdit, onDelete }) {
         <div className="flex items-center gap-2">
           <button 
             onClick={() => onEdit && onEdit(row)}
-            className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+            className="p-1.5 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 rounded-lg transition-colors"
             title="Edit User"
           >
             <Edit2 size={18} />
@@ -50,7 +52,7 @@ export default function UserTable({ users = [], onEdit, onDelete }) {
           
           <button 
             onClick={() => onDelete && onDelete(row.id)}
-            className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            className="p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
             title="Delete User"
           >
             <Trash2 size={18} />
@@ -65,7 +67,7 @@ export default function UserTable({ users = [], onEdit, onDelete }) {
       tableName="users"
       data={users}
       columns={columns}
-      title="Associated Users"
+      title="Users Data"
       searchPlaceholder="Search users..."
     />
   );

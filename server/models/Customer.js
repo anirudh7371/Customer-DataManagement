@@ -29,7 +29,7 @@ class Customer {
   }
 
   static async create(customerData) {
-    const { name, country } = customerData;
+    const { name, country } = customerData
     const query = `
       INSERT INTO customers (name, country)
       VALUES ($1, $2)
