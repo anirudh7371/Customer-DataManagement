@@ -1,49 +1,88 @@
-import React from 'react';
-import { Users, UserPlus } from 'lucide-react';
-import UserTable from './UserTable';
+import React, { useMemo } from 'react';
+import { Edit2, Eye, Trash2, Users } from 'lucide-react';
+import DataTable from './DataTable';
 
-export default function CustomerDetail({ customer, onEdit, onAddUser, onEditUser, onDeleteUser }) {
-  return (
-    <>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
-        <div className="flex justify-between items-start">
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900">{customer.name}</h2>
-            <div className="flex items-center gap-4 mt-2 text-gray-600">
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                {customer.country}
-              </span>
-              <span className="text-gray-300">|</span>
-              <span className="flex items-center gap-1.5">
-                <Users size={16} />
-                {customer.user_count || (customer.users ? customer.users.length : 0)} Users
-              </span>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <button 
-              onClick={onAddUser}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <UserPlus size={16} />
-              Add User
-            </button>
-            <button 
-              onClick={() => onEdit(customer)} 
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100"
-            >
-              Edit Profile
-            </button>
-          </div>
+export default function CustomerList({ customers, onViewDetails, onEdit, onDelete }) {
+  const columns = useMemo(() => [
+    { 
+      key: 'id', 
+      label: 'ID', 
+      sortable: true, 
+      filterable: true,
+      render: (row) => <span className="text-gray-500 dark:text-gray-400 font-mono text-xs">#{row.id}</span>
+    },
+    { 
+      key: 'name', 
+      label: 'Customer Name', 
+      sortable: true, 
+      filterable: true,
+      render: (row) => (
+        <button 
+          onClick={() => onViewDetails(row.id)}
+          className="font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline text-left"
+        >
+          {row.name}
+        </button>
+      )
+    },
+    { 
+      key: 'country', 
+      label: 'Country', 
+      sortable: true, 
+      filterable: true 
+    },
+    { 
+      key: 'user_count', 
+      label: 'Users', 
+      sortable: true, 
+      filterable: false,
+      render: (row) => (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
+          <Users size={12} className="mr-1" />
+          {row.user_count}
+        </span>
+      )
+    },
+    {
+      key: 'actions',
+      label: 'Actions',
+      sortable: false,
+      filterable: false,
+      render: (row) => (
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => onViewDetails(row.id)}
+            className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
+            title="View Details"
+          >
+            <Eye size={18} />
+          </button>
+          <button 
+            onClick={() => onEdit(row)}
+            className="p-1.5 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 rounded-lg transition-colors"
+            title="Edit"
+          >
+            <Edit2 size={18} />
+          </button>
+          <button 
+            onClick={() => onDelete(row.id)}
+            className="p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
+            title="Delete"
+          >
+            <Trash2 size={18} />
+          </button>
         </div>
-      </div>
+      )
+    }
+  ], [onViewDetails, onEdit, onDelete]);
 
-      <UserTable 
-        users={customer.users || []} 
-        onEdit={onEditUser}
-        onDelete={onDeleteUser}
-      />
-    </>
+  return (
+    <DataTable 
+      tableName="customers"
+      data={customers}
+      columns={columns}
+      title="All Customers"
+      searchPlaceholder="Search customers or countries..."
+    />
   );
 }

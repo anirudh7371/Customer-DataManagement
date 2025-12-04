@@ -9,6 +9,7 @@ export async function getUsersByCustomerId(req, res) {
   } catch (error) {
     console.error("Error in getUsersByCustomerId:", error);
     res.status(500).json({ error: 'Failed to fetch users' });
+
   }
 }
 
