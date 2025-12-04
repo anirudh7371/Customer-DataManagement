@@ -1,0 +1,51 @@
+# Node modules
+node_modules/
+*/node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+*/dist/
+*/build/
+
+# Environment files
+.env
+.env.local
+.env*.local
+**/.env
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing
+coverage/
+.nyc_output/
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Misc
+.cache/
+.tmp/
+.temp/
+README.md
+*.md
