@@ -2,14 +2,12 @@ import User from '../models/User.js';
 
 export async function getUsersByCustomerId(req, res) {
   const { id } = req.params;
-  
   try {
     const users = await User.findByCustomerId(id);
     res.json(users);
   } catch (error) {
     console.error("Error in getUsersByCustomerId:", error);
     res.status(500).json({ error: 'Failed to fetch users' });
-
   }
 }
 
@@ -18,6 +16,11 @@ export async function createUser(req, res) {
     if (req.params.id) {
         req.body.customer_id = req.params.id;
     }
+    
+    if (!req.body.customer_id) {
+        return res.status(400).json({ error: 'customer_id is required' });
+    }
+
     const user = await User.create(req.body);
     res.status(201).json(user);
   } catch (error) {
@@ -26,7 +29,7 @@ export async function createUser(req, res) {
 }
 
 export async function updateUser(req, res) {
-  const { customerId, id } = req.params;
+  const { id } = req.params;
   try {
     const user = await User.update(id, req.body);
     if (!user) return res.status(404).json({ error: 'User not found' });
@@ -37,7 +40,7 @@ export async function updateUser(req, res) {
 }
 
 export async function deleteUser(req, res) {
-  const { customerId, id } = req.params;
+  const { id } = req.params;
   try {
     const user = await User.delete(id);
     if (!user) return res.status(404).json({ error: 'User not found' });

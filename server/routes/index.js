@@ -16,6 +16,7 @@ import {
 
 const router = express.Router();
 
+// --- Customer Routes ---
 router.get('/customers', getAllCustomers);
 router.get('/customers/:id', getCustomerById);
 router.post('/customers', createCustomer);
@@ -24,9 +25,8 @@ router.delete('/customers/:id', deleteCustomer);
 
 // --- User Routes ---
 router.get('/customers/:id/users', getUsersByCustomerId);
-router.post('/customers/:id/users', createUser);
-router.post('/customers/:id/users', createUser);
-router.put('/customers/:customerId/users/:id', updateUser);
-router.delete('/customers/:customerId/users/:id', deleteUser);
+router.post('/users', createUser);
+router.put('/users/:id', updateUser);
+router.delete('/users/:id', deleteUser);
 
 export default router;
